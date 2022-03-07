@@ -35,9 +35,9 @@ class Matrix:
         result = [[0 for _ in range(rows1)] for _ in range(cols2)]
 
         for j in range(rows1):
-            for i in range(cols1):
+            for i in range(rows1):
                 rowSum = 0
-                for k in range(rows1):
+                for k in range(cols1):
                     rowSum += self._matrix[i][k] * other[k][i]
                 result[j][i] = rowSum
         return Matrix(result)
@@ -65,6 +65,19 @@ class Matrix:
 
 
 
-def transponse(matrix):
+def transpose(matrix):
     rows, cols = matrix.size()
     return Matrix([[matrix[i][j] for i in range(cols)] for j in range(rows)])
+
+a = Matrix([[1, 0, 2], [-1, 3, 1]])
+b = Matrix((2, 3), 1)
+c = Matrix([[3, 1], [2, 1], [1, 0]])
+
+ab_sum = a.__add__(b)
+print(f"Suma macierzy: \n{ab_sum}")
+
+abc_mul = ab_sum.__mul__(c)
+print(f"Iloczyn macierzy: \n{abc_mul}")
+
+abct = transpose(abc_mul)
+print(f"Transpozycja mecierzy: \n{abct}")
