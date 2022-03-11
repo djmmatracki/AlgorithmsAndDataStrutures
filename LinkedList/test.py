@@ -51,6 +51,10 @@ class LinkedListTests(unittest.TestCase):
         newList = self.linked.drop(3)
         self.assertEqual(newList.toList(), [4, 5, 6])
 
+    def test_drop2(self):
+        newList = self.linked.drop(6)
+        self.assertEqual(newList.head, None)
+
 
 if __name__ == "__main__":
     unittest.main()

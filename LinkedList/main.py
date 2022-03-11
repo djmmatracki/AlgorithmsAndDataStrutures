@@ -97,7 +97,7 @@ class LinkedList:
             i += 1
         
         if current is None:
-            return None
+            return LinkedList()
         
         newHead = Node(current.data)
         currentNew = newHead
