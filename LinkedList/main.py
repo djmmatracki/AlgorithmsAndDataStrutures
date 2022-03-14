@@ -13,8 +13,8 @@ class LinkedList:
     def destroy(self) -> None:
         self.head = None
 
-    def add(self, data) -> None:
-        new = Node(data)
+    def add(self, val) -> None:
+        new = Node(val)
         new.next = self.head
         self.head = new
 
@@ -120,3 +120,22 @@ class LinkedList:
             current = current.next
         return result
 
+
+if __name__ == "__main__":
+
+    linked = LinkedList()
+    linked.addToEnd(1)
+    linked.addToEnd(2)
+    linked.addToEnd(3)
+    linked.addToEnd(4)
+    linked.addToEnd(5)
+    linked.addToEnd(6)
+    print("First element: ", linked.get())
+    linked.add(4)
+    print("First element after adding: ", linked.get())
+    linked.remove()
+    print("First element after removing: ", linked.get())
+    print("Is list empty: ", linked.is_empty())
+    print("List length: ", linked.length())
+    print("Take linked list first element: ", linked.take(3).get())
+    print("Drop linked list first element: ", linked.drop(3).get())
