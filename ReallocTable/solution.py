@@ -10,6 +10,10 @@ class Queue:
         self.start = 0
         self.queue = [None for _ in range(5)]
     
+    @property
+    def size(self):
+        return len(self.queue)
+
     def is_empty(self):
         return self.start == self.end
     
@@ -23,7 +27,7 @@ class Queue:
         data = self.queue[self.start]
         self.queue[self.start] = None
 
-        if len(self.queue) == self.start + 1:
+        if self.size == self.start + 1:
             self.start = 0
         else:
             self.start += 1
@@ -33,8 +37,8 @@ class Queue:
     def enqueue(self, data) -> None:
         self.queue[self.end] = data
 
-        if self.end + 1 == self.start or (self.end + 1 == len(self.queue) and self.start == 0):
-            newSize = len(self.queue) * 2
+        if self.end + 1 == self.start or (self.end + 1 == self.size and self.start == 0):
+            newSize = self.size * 2
             newTab = realloc(self.queue, newSize)
             i = newSize - self.start
             j = self.start
@@ -46,7 +50,7 @@ class Queue:
             
             self.queue = newTab
             
-        if self.end + 1 == len(self.queue):
+        if self.end + 1 == self.size:
             self.end = 0
             return
 
@@ -59,7 +63,7 @@ class Queue:
 
         while start != end:
             oldStart = start
-            if start + 1 == len(self.queue):
+            if start + 1 == self.size:
                 start = 0
             else:
                 start += 1
