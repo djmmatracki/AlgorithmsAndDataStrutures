@@ -5,15 +5,14 @@ from extraSolution import UnrolledLinkedList
 class TestQueue(unittest.TestCase):
     def test_1(self) -> None:
         self.queue = UnrolledLinkedList()
-        self.queue.insert(0, 1)
-        self.queue.insert(0, 1)
-        self.queue.insert(0, 1)
-        self.queue.insert(0, 1)
-        self.queue.insert(0, 1)
-        self.queue.insert(0, 1)
-        self.queue.insert(0, 2)
-        self.queue.insert(0, 4)
-        self.queue.insert(0, 3)
+        for i in range(1, 10):
+            self.queue.insert(i-1, i)
+
+        print(self.queue.get(3))
+
+        self.queue.printList()
+        self.queue.insert(1, 10)
+        self.queue.insert(8, 11)
         self.queue.printList()
 
 

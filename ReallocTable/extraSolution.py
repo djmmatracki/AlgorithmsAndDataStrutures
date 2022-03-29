@@ -1,5 +1,5 @@
 
-STATIC_LIST_LENGTH = 5
+STATIC_LIST_LENGTH = 6
 
 def addElementAtIndex(array, index, val):
     i = index
@@ -68,13 +68,15 @@ class UnrolledLinkedList:
         i = 0
         current = self.head
 
+        if current is None:
+            return None
+
         while i < nodeIndex:
-            if current is None:
-                return None
             current = current.next
             i += 1
         staticListIndex = index % STATIC_LIST_LENGTH
-        return current[staticListIndex]
+
+        return current.data[staticListIndex]
     
 
     def insert(self, index, val):
@@ -129,8 +131,8 @@ class UnrolledLinkedList:
         
         # Patrzymy w ktorej polowej jest index
         mid = STATIC_LIST_LENGTH // 2
-        left = current.data[:mid] + [None for _ in range(mid + 1)]
-        right =  current.data[mid:] + [None for _ in range(mid)]
+        left = current.data[:mid] + [None for _ in range(mid)]
+        right =  current.data[mid:] + [None for _ in range(mid-1)]
 
         if staticListIndex >= mid:
             left[staticListIndex] = val
@@ -144,6 +146,31 @@ class UnrolledLinkedList:
         current.next = newNode
 
         return
+    
+
+    def remove(self, index):
+        current = self.head
+
+        if current is None:
+            return
+
+        nodeIndex = (index // STATIC_LIST_LENGTH)
+        i = 0
+
+        # Szukamy node'a od ktorego mamy usunac
+        while i < nodeIndex:
+            current = current.next
+            i += 1
+        
+        if current is None:
+            return
+        
+        # Sprawdzamy czy po usunieciu bedzie mniej niz polowa
+        # if current.size < STATIC_LIST_LENGTH // 2:
+        #     if current.next is not None:
+        #         if current.size + current.next.size < STATIC_LIST_LENGTH // 2:
+        #             current.next.data
+            
 
 
     
@@ -152,6 +179,7 @@ class UnrolledLinkedList:
         while current is not None:
             print(f"{current.data} ", end="")
             current = current.next
+        print()
 
     def toList(self):
         result = []
