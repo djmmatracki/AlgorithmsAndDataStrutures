@@ -16,6 +16,8 @@ class MixedTable:
             if el is not None:
                 key, val = el
                 stringRepr += f"  {key}: {val},\n"
+            else:
+                stringRepr += "  None,\n"
         stringRepr += "}"
         return stringRepr
 
@@ -53,6 +55,8 @@ class MixedTable:
         index = self.mixing(key, self.isIndexAvailable)
         if index is not None:
             self._table[index] = element
+            return
+        print("Brak miejsca")
 
     
     def remove(self, key):
@@ -83,10 +87,11 @@ def test_func1(size, c1, c2):
     print(table.get(5))
     print(table.get(14))
     table.insert((5, 'Z'))
+    print(table.get(5))
     table.remove(5)
     print(table)
     print(table.get(31))
-    table.insert(('W', 'test'))
+    table.insert(('test', 'W'))
     print(table)
 
 def test_func2(size, c1, c2):
@@ -98,3 +103,6 @@ def test_func2(size, c1, c2):
     print(table)
 
 test_func1(13, 1, 0)
+test_func2(13, 1, 0)
+test_func2(13, 0, 1)
+test_func1(13, 0, 1)
