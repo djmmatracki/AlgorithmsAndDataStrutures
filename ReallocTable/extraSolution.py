@@ -18,6 +18,15 @@ def addElementAtIndex(array, index, val):
         i += 1
 
 
+def addElementAtEnd(array, val):
+    i = 0
+    while array[i] is None:
+        i += 1
+        if i == len(array):
+            return
+    array[i] = val
+
+
 class Node:
     def __init__(self, data=None, next=None) -> None:
         if data is None:
@@ -132,7 +141,7 @@ class UnrolledLinkedList:
         # Patrzymy w ktorej polowej jest index
         mid = STATIC_LIST_LENGTH // 2
         left = current.data[:mid] + [None for _ in range(mid)]
-        right =  current.data[mid:] + [None for _ in range(mid-1)]
+        right =  current.data[mid:] + [None for _ in range(mid)]
 
         if staticListIndex >= mid:
             left[staticListIndex] = val
@@ -161,16 +170,39 @@ class UnrolledLinkedList:
         while i < nodeIndex:
             current = current.next
             i += 1
-        
+
         if current is None:
             return
+
+        staticListIndex = index % STATIC_LIST_LENGTH
+
+        # Sprawdzamy czy element jest juz pusty
+        if current.data[staticListIndex] is None:
+            return
         
-        # Sprawdzamy czy po usunieciu bedzie mniej niz polowa
-        # if current.size < STATIC_LIST_LENGTH // 2:
-        #     if current.next is not None:
-        #         if current.size + current.next.size < STATIC_LIST_LENGTH // 2:
-        #             current.next.data
-            
+        if current.size - 1 < STATIC_LIST_LENGTH // 2:
+            if current.next is not None:
+                # Sprawdzamy czy po usunieciu w bierzacej bedzie mniej niz polowa
+                if current.size - 1 < STATIC_LIST_LENGTH // 2:
+                    # Sprawdzamy czy po usunieciu z nastepnej bedzie mniejsza niz polowa
+                    if current.next.size - 1 < STATIC_LIST_LENGTH // 2:
+                        current.data[staticListIndex] = None
+
+                        nextList = [el for el in current.next.data if el is not None]
+                        currentList = [el for el in current.data if el is not None]
+
+                        current.data = currentList + nextList
+                        currentSize = len(current.data)
+                        current.data += [None for _ in range(STATIC_LIST_LENGTH-currentSize)]
+                        return
+
+                    current.data[staticListIndex] = None
+                    newElement = current.next.data[0]
+                    current.next.data = current.next.data[1:] + [None]
+                    addElementAtIndex(current.data, 0, newElement)
+                    return
+
+        current.data[staticListIndex] = None
 
 
     

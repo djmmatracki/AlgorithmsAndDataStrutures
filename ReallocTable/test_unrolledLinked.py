@@ -14,6 +14,10 @@ class TestQueue(unittest.TestCase):
         self.queue.insert(1, 10)
         self.queue.insert(8, 11)
         self.queue.printList()
+        self.queue.remove(2)
+        self.queue.printList()
+        self.queue.remove(3)
+        self.queue.printList()
 
 
 if __name__ == "__main__":
