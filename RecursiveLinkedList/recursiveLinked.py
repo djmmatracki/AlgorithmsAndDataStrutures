@@ -1,4 +1,4 @@
-from main import Node, LinkedList
+from LinkedList.main import Node, LinkedList
 
 # Operacje bazowe
 

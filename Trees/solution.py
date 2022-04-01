@@ -1,5 +1,3 @@
-from collections import deque
-
 
 class Node:
     def __init__(self, key, value, left=None, right=None) -> None:
@@ -126,6 +124,5 @@ tree.insert(1, 5)
 tree.insert(4, 6)
 tree.insert(7, 3)
 # tree.print_tree()
-# tree.delete(7)
 tree.print_tree()
-print(tree.height())
+# print(tree.height())
