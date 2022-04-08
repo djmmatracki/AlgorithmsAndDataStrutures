@@ -14,6 +14,46 @@ class AVLNode(Node):
         return find_height(self.right)
 
 
+def findMinValue(head):
+    if head is None:
+        return head
+    
+    if head.left is None:
+        return head
+    
+    return findMinValue(head.left)
+
+
+def delete_element(head, key):
+    if head is None:
+        return head
+    
+    if head.key > key:
+        head.left = delete_element(head.left, key)
+        return head
+    
+    if head.key < key:
+        head.right = delete_element(head.right, key)
+        return head
+
+    if head.left is None:
+        temp = head.right
+        # head = None
+        return temp
+    
+    if head.right is None:
+        temp = head.left
+        # head = None
+        return temp
+    
+    temp = findMinValue(head.right)
+
+    head.key = temp.key
+    head.value = temp.value
+    head.right = delete_element(head.right, temp.key)
+    return head
+
+
 def insert_node(head, key, value):
     if head is None:
         return AVLNode(key, value)
@@ -51,10 +91,36 @@ def find_inbalance(head):
 
 
 def resolve_left_imbalance(head):
-    pass
+    left_node = head.left
+    if left_node.left is None:
+        head.right = AVLNode(key=head.key, value=head.value)
+        head.key, head.value = left_node.right.key, left_node.right.value
+        left_node.right = None
+        return
+    
+    if left_node.right is None:
+        head.right = AVLNode(key=head.key, value=head.value)
+        head.key, head.value = left_node.key, left_node.value
+        left_node.key, left_node.value = left_node.left.key, left_node.left.value
+        left_node.left = None
+        return
+
 
 def resolve_right_imbalance(head):
-    pass
+    right_node = head.right
+
+    if right_node.right is None:
+        head.left = AVLNode(key=head.key, value=head.value)
+        head.key, head.value = right_node.left.key, right_node.left.value
+        right_node.left = None
+        return
+
+    if right_node.left is None:
+        head.left = AVLNode(key=head.key, value=head.value)
+        head.key, head.value = right_node.key, right_node.value
+        right_node.key, right_node.value = right_node.right.key, right_node.right.value
+        right_node.right = None
+        return
 
 
 class AVLTree(BinaryTree):
@@ -64,7 +130,19 @@ class AVLTree(BinaryTree):
     def insert(self, key, value):
         if self.head is None:
             self.head = AVLNode(key, value)
-        insert_node(key, value)
+        insert_node(self.head, key, value)
+
+        result = find_inbalance(self.head)
+        if result is not None:
+            head, side = result
+
+            if side == "left":
+                resolve_left_imbalance(head)
+                return
+            resolve_right_imbalance(head)
+
+    def delete(self, key):
+        super().delete(key)
 
         result = find_inbalance(self.head)
         if result is not None:
@@ -74,3 +152,29 @@ class AVLTree(BinaryTree):
                 resolve_left_imbalance(head)
                 return
             resolve_right_imbalance(head)
+
+
+if __name__ == "__main__":
+    tree = AVLTree()
+    tree.insert(50, 'A')
+    tree.insert(15, 'B')
+    tree.insert(62, 'C')
+    tree.insert(5, 'D')
+    tree.insert(2, 'E')
+    tree.insert(1, 'F')
+    # tree.insert(11, 'G')
+    # tree.insert(100, 'H')
+    # tree.insert(7, 'I')
+    # tree.insert(6, 'J')
+    # tree.insert(55, 'K')
+    # tree.insert(52, 'L')
+    # tree.insert(51, 'M')
+    # tree.insert(57, 'N')
+    # tree.insert(8, 'O')
+    # tree.insert(9, 'P')
+    # tree.insert(10, 'R')
+    # tree.insert(99, 'S')
+    # tree.insert(12, 'T')
+    tree.print_tree()
+    print(tree.head.left_height)
+    print(tree.head.right_height)
