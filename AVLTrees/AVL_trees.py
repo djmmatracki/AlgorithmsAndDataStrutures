@@ -151,25 +151,6 @@ def insert_node(head, key, value):
         return head
 
 
-def find_inbalance(head):
-    if head is None:
-        return None
-
-    if head.left_height == 0 and head.right_height == 2:
-        return head, "right"
-
-    if head.right_height == 0 and head.left_height == 2:
-        return head, "left"
-
-    imbalance = head.right_height - head.left_height
-
-    if imbalance > 1:
-        return find_inbalance(head.right)
-    
-    if imbalance < -1:
-        return find_inbalance(head.left)
-
-
 def resolve_left_imbalance(head):
     left_node = head.left
 
