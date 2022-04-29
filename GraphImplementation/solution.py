@@ -1,14 +1,20 @@
 from abc import ABC, abstractmethod
-
+import polska
 
 class Node:
     def __init__(self, key) -> None:
         self.key = key
 
+    def __str__(self) -> str:
+        return str(self.key)
+
+    def __repr__(self) -> str:
+        return str(self.key)
+
     def __eq__(self, __o: object) -> bool:
-        if "key" not in dir(__o):
-            raise ValueError
-        return self.key == __o.key
+        if "key" in dir(__o):
+            return self.key == __o.key
+        return self.key == __o
     
     def __hash__(self) -> int:
         return hash(self.key)
@@ -27,44 +33,45 @@ class Graph(ABC):
         self.map = dict()
     
     @abstractmethod
-    def insertVertex(vertex):
+    def insertVertex(self, vertex):
         """Wstawia wezel do grafu"""
         raise NotImplementedError()
 
     @abstractmethod
-    def insertEdge(vertex1, vertex2, edge):
+    def insertEdge(self, vertex1, vertex2, edge):
         """Wstawia krawedz do grafu"""
         raise NotImplementedError()
 
     @abstractmethod
-    def deleteVertex(vertex):
+    def deleteVertex(self, vertex):
         """Usuwa wierzcholek z grafu"""
         raise NotImplementedError()
 
     @abstractmethod
-    def deleteEdge(vertex1, vertex2):
+    def deleteEdge(self, vertex1, vertex2):
         """Usuwa krawedz z grafu"""
         raise NotImplementedError()
 
-    @abstractmethod
-    def getVertexIdx(vertex):
+    def getVertexIdx(self, vertex):
         """Zwraca indeks wezla"""
-        raise NotImplementedError()
+        if vertex not in self.map.keys():
+            return
+        return self.map[vertex]
 
-    @abstractmethod
-    def getVertex(vertex_idx):
+    def getVertex(self, vertex_idx):
         """Zwraca wezel o podanym indeksie"""
-        raise NotImplementedError()
+        if vertex_idx > len(self.nodes):
+            return
+        return self.nodes[vertex_idx]
 
     @abstractmethod
-    def neighbours(vertex_idx):
+    def neighbours(self, vertex_idx):
         """Zwraca liste indeksow wezlow przyleglych do wezla o podanym indeksie"""
         raise NotImplementedError()
 
-    @abstractmethod
     def order(self):
         """Zwraca liczbe wezlow"""
-        raise NotImplementedError()
+        return len(self.nodes)
 
     @abstractmethod
     def size(self):
@@ -80,8 +87,144 @@ class Graph(ABC):
 class AdjmatGraph(Graph):
     def __init__(self) -> None:
         super().__init__()
+        self.graph = dict()
+    
+    def insertVertex(self, vertex):
+        if vertex in self.graph.keys():
+            return
+        
+        self.nodes.append(vertex)
+        self.map[vertex] = len(self.nodes) - 1
+        self.graph[vertex] = []
+    
+    def insertEdge(self, vertex1, vertex2, edge):
+        if vertex1 not in self.nodes or vertex2 not in self.nodes:
+            return
+        self.graph[vertex1].append(vertex2)
+        self.graph[vertex2].append(vertex1)
+    
+    def deleteVertex(self, vertex):
+        if vertex not in self.nodes:
+            return
+        
+        index = self.map[vertex]
+        self.nodes.pop(index)
+        self.graph.pop(vertex)
+
+        for key, value in self.graph.items():
+            if vertex in value:
+                self.graph[key] = [el for el in value if el != vertex]
+
+        self.map.pop(vertex)
+        for i, node in enumerate(self.nodes):
+            self.map[node] = i
+
+    
+    def deleteEdge(self, vertex1, vertex2):
+        if vertex1 not in self.nodes or vertex2 not in self.nodes:
+            return
+
+        self.graph[vertex1].remove(vertex2)
+        self.graph[vertex2].remove(vertex1)
+    
+    
+    def neighbours(self, vertex_idx):
+        if vertex_idx > len(self.nodes):
+            return
+        return [self.map[vert] for vert in self.graph[self.getVertex(vertex_idx)]]
+    
+    def edges(self):
+        edges = []
+        for u, values in self.graph.items():
+            for v in values:
+                edges.append((u, v))
+        return edges
+
+    def size(self):
+        return len(self.edges())
 
 
 class MatrixGraph(Graph):
     def __init__(self) -> None:
         super().__init__()
+        self.graph = []
+    
+    def insertVertex(self, vertex):
+        if vertex in self.nodes:
+            return
+
+        self.nodes.append(vertex)
+        self.map[vertex] = len(self.nodes) - 1
+        for row in self.graph:
+            row.append(0)
+        self.graph.append([0 for _ in range(len(self.nodes))])
+    
+    def insertEdge(self, vertex1, vertex2, edge):
+        if vertex1 not in self.nodes or vertex2 not in self.nodes:
+            return
+
+        index1 = self.map[vertex1]
+        index2 = self.map[vertex2]
+
+        self.graph[index1][index2] = 1
+        self.graph[index2][index1] = 1
+    
+    def deleteVertex(self, vertex):
+        if vertex not in self.nodes:
+            return
+        
+        index = self.map[vertex]
+        self.nodes.pop(index)
+        self.map.pop(vertex)
+
+        for i, node in enumerate(self.nodes):
+            self.map[node] = i
+        
+        self.graph.pop(index)
+        for row in self.graph:
+            row.pop(index)
+    
+    def deleteEdge(self, vertex1, vertex2):
+        if vertex1 not in self.nodes or vertex2 not in self.nodes:
+            return
+        
+        index1 = self.map[vertex1]
+        index2 = self.map[vertex2]
+
+        self.graph[index1][index2] = 0
+        self.graph[index2][index1] = 0
+    
+    def neighbours(self, vertex_idx):
+        
+        indexes = []
+        for i in range(len(self.nodes)):
+            if self.graph[vertex_idx][i] == 1:
+                indexes.append(i)
+        return indexes
+
+    def size(self):
+        return len(self.edges())
+
+    def edges(self):
+        edges = []
+        for i in range(self.order()):
+            for j in range(self.order()):
+                if self.graph[i][j] != 0:
+                    edges.append((self.nodes[i], self.nodes[j]))
+        return edges
+
+
+
+if __name__ == "__main__":
+    edges = polska.graf
+    graph = MatrixGraph()
+
+    for u, v in edges:
+        graph.insertVertex(Node(u))
+        graph.insertVertex(Node(v))
+        graph.insertEdge(Node(u), Node(v), 1)
+    graph.deleteVertex(Node('K'))
+    graph.deleteEdge(Node('W'), Node('E'))
+    polska.draw_map(graph.edges())
+
+
