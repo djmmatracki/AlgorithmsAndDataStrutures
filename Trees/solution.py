@@ -1,3 +1,7 @@
+# SKONCZONE
+
+
+from collections import deque
 
 
 class Node:
@@ -135,35 +139,58 @@ class BinaryTree:
 
     def height(self):
         return find_height(self.head)
+    
+    def print(self):
+
+        def listKeys(head):
+            if head.left:
+                leftKeys = listKeys(head.left)
+            else:
+                leftKeys = []
+            
+            if head.right:
+                rightKeys = listKeys(head.right)
+            else:
+                rightKeys = []
+            
+            return leftKeys + [head] + rightKeys
+
+        elements = listKeys(self.head)
+        result = ""
+        for el in elements:
+            result += f"{el.key} : {el.value} \n"
+        return result
 
 
-# tree = BinaryTree()
-
-# tree.insert(50, 'A')
-# tree.insert(15, 'B')
-# tree.insert(62, 'C')
-# tree.insert(5, 'D')
-# tree.insert(20, 'E')
-# tree.insert(58, 'F')
-# tree.insert(91, 'G')
-# tree.insert(3, 'H')
-# tree.insert(8, 'I')
-# tree.insert(37, 'J')
-# tree.insert(60, 'K')
-# tree.insert(24, 'L')
-# tree.print_tree()
-
-# print(tree.search(24))
-# print(tree.insert(20, "AA"))
-# tree.insert(6, 'M')
-# tree.delete(62)
-# tree.insert(59, 'N')
-# tree.insert(100, 'P')
-# tree.delete(8)
-# tree.delete(15)
-# tree.insert(55, "R")
-# tree.delete(50)
-# tree.delete(5)
-# tree.delete(24)
-# print(tree.height())
-# tree.print_tree()
+if __name__ == "__main__":
+    tree = BinaryTree()
+    
+    tree.insert(50, 'A')
+    tree.insert(15, 'B')
+    tree.insert(62, 'C')
+    tree.insert(5, 'D')
+    tree.insert(20, 'E')
+    tree.insert(58, 'F')
+    tree.insert(91, 'G')
+    tree.insert(3, 'H')
+    tree.insert(8, 'I')
+    tree.insert(37, 'J')
+    tree.insert(60, 'K')
+    tree.insert(24, 'L')
+    tree.print_tree()
+    
+    print(tree.search(24))
+    print(tree.insert(20, "AA"))
+    tree.insert(6, 'M')
+    tree.delete(62)
+    tree.insert(59, 'N')
+    tree.insert(100, 'P')
+    tree.delete(8)
+    tree.delete(15)
+    tree.insert(55, "R")
+    tree.delete(50)
+    tree.delete(5)
+    tree.delete(24)
+    print(tree.height())
+    print(tree.print())
+    tree.print_tree()

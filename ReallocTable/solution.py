@@ -31,31 +31,44 @@ class Queue:
             self.start = 0
         else:
             self.start += 1
-        print(data)
+
         return data
 
-    def enqueue(self, data) -> None:
-        self.queue[self.end] = data
+    def isListEmpty(self):
+        for el in self.queue:
+            if el is not None:
+                return False
+        return True
 
-        if self.end + 1 == self.start or (self.end + 1 == self.size and self.start == 0):
+    def enqueue(self, data) -> None:
+        if self.isListEmpty():
+            self.queue[self.end] = data
+            self.end += 1
+            return
+
+        if self.end == self.start or (self.end == self.size and self.start == 0):
             newSize = self.size * 2
             newTab = realloc(self.queue, newSize)
-            i = newSize - self.start
+            i = newSize + self.start - len(self.queue)
             j = self.start
 
             while i < newSize:
                 newTab[i] = self.queue[j]
+                newTab[j] = None
                 j += 1
                 i += 1
             
             self.queue = newTab
+            self.start = newSize - self.start
             
-        if self.end + 1 == self.size:
-            self.end = 0
-            return
+        if self.end == self.size:
+            self.end = 1
+        else:
+            self.end += 1
 
-        self.end += 1
+        self.queue[self.end - 1] = data
     
+
     def printQueue(self) -> None:
         result = "[ "
         start = self.start

@@ -1,6 +1,5 @@
 
 
-
 class Element:
     def __init__(self, value, priority) -> None:
         self.value = value
@@ -11,6 +10,12 @@ class Element:
     
     def __lt__(self, other):
         return self.priority < other.priority
+    
+    def __ge__(self, other):
+        return self.priority >= other.priority
+
+    def __le__(self, other):
+        return self.priority <= other.priority
 
     
     def __eq__(self, __o: object) -> bool:
@@ -53,26 +58,32 @@ class PriorityQueue:
 
         current = 0
         self.queue[current], self.queue[self.size - 1] = self.queue[self.size - 1], self.queue[current]
-        
+        value = self.queue.pop()
+
+        if len(self.queue) == 0:
+            return value
 
         while current < len(self.queue):
             leftIndex = self.left(current)
             rightIndex = self.right(current)
 
-            if leftIndex >= len(self.queue):
-                return self.queue.pop()
-
+            if rightIndex >= len(self.queue):
+                return value
+            
             if self.queue[leftIndex] > self.queue[current]:
-                self.queue[current], self.queue[leftIndex] = self.queue[leftIndex], self.queue[current]
-                current = leftIndex
-                continue
+                if self.queue[leftIndex] >= self.queue[rightIndex]:
+                    self.queue[current], self.queue[leftIndex] = self.queue[leftIndex], self.queue[current]
+                    current = leftIndex
+                    continue
 
             if self.queue[rightIndex] > self.queue[current]:
-                self.queue[current], self.queue[rightIndex] = self.queue[rightIndex], self.queue[current]
-                current = rightIndex
-                continue
+                if self.queue[rightIndex] >= self.queue[leftIndex]:
+                    self.queue[current], self.queue[rightIndex] = self.queue[rightIndex], self.queue[current]
+                    current = rightIndex
+                    continue
 
-            return self.queue.pop()
+            return value
+
 
     def enqueue(self, value, priority):
         newElement = Element(value, priority)
