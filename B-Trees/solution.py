@@ -30,6 +30,13 @@ def insertKey(node, key):
 
         newNode = BNode(n)
         newNode.keys = newKeys
+
+        k = (n+1)//2 + 1
+        while k < (n + 1):
+            newNode.children[k - (n+1)//2 - 1] = node.children[k]
+            node.children[k] = None
+            k += 1
+
         return middle, newNode
 
     # Wpisac w odpowiednie miejsce nowy klucz
@@ -138,8 +145,14 @@ class BTree:
                     return
 
                 middleKey, newNode = result
-                res = insertKey(node, middleKey)
+                # Dostajemy noda ktorego musimy dodac do aktualnego
+                # oraz dostajemy middle key ktory musimy dodac
 
+                # Probujemy dodac middle key
+                res = insertKey(node, middleKey)
+                # Jezeli sie nie uda to dostajemy noda oraz middle key
+
+                # Jak dodamy to konczymy
                 if res is None:
                     # Przesuwamy potomki aby wstawic nowy wezel
                     temp = newNode
@@ -150,23 +163,20 @@ class BTree:
                         i += 1
                     return
 
-                
                 if node == self.root:
                     # Tworzymy nowego roota z srodkowym elementem
                     # i wskazaniami na starego roota oraz nowy wezel
-                    middleKey, newNode = result
+                    newRootKey, newLeftNode = res
                     newRoot = BNode(self.max_keys)
-                    newRoot.keys[0] = middleKey
+                    newRoot.keys[0] = newRootKey
                     newRoot.children[0] = node
-                    newRoot.children[1] = newNode
+                    newRoot.children[1] = newLeftNode
                     self.root = newRoot
+                    newLeftNode.children[self.max_keys//2] = newNode
                     return
                 
                 return result
             
-            # Sprawdzamy czy nie zostal podzielony root
-            
-
         return insertToNode(self.root, key)
     
 
@@ -174,7 +184,24 @@ if __name__ == "__main__":
 
     tree = BTree(4)
     arr = [5, 17, 2, 14, 7, 4, 12, 1, 16, 8, 11, 9, 6, 13, 0, 3, 18, 15, 10, 19]
+
     for el in arr:
         tree.insert(el)
-    print(len(arr))
     tree.print_tree()
+
+    tree1 = BTree(4)
+    for i in range(20):
+        tree1.insert(i)
+
+    tree1.print_tree()
+
+    for i in range(20, 200):
+        tree1.insert(i)
+    
+    tree1.print_tree()
+
+    tree2 = BTree(6)
+    for i in range(200):
+        tree2.insert(i)
+    
+    tree2.print_tree()
