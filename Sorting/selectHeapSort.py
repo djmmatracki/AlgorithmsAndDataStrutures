@@ -152,6 +152,11 @@ def argmin(arr):
     return arg
 
 
+def shift(array, i, m):
+    element = array.pop(m)
+    array.insert(i, element)
+
+
 def selection_sort(array):
     n = len(array)
     i = 0
@@ -162,24 +167,13 @@ def selection_sort(array):
         i += 1
 
 
-def insertion_sort(array):
+def selection_sort_shift(array):
     n = len(array)
-    i = 1
-    while i < n:
-        key = array.pop(i)
-        placed = False
-        j = i - 1
-        while j >= 0:
-            if array[j] > key:
-                j -= 1
-                continue
-            
-            array.insert(j+1, key)
-            placed = True
-            break
+    i = 0
 
-        if not placed:
-            array.insert(0, key)
+    while i < n:
+        m = argmin(arr[i:]) + i
+        shift(arr, i, m)
         i += 1
 
 
@@ -205,14 +199,14 @@ if __name__ == "__main__":
     arr = [(5,'A'), (5,'B'), (7,'C'), (2,'D'), (5,'E'), (1,'F'), (7,'G'), (5,'H'), (1,'I'), (2,'J')]
     arr = [Element(key, value) for value, key in arr]
     selection_sort(arr)
-    print("Wynik sortowania insertion sort")
+    print("Wynik sortowania select sort")
     print(arr)
     
     arr = [random.randint(0, 100) for _ in range(10000)]
     t_start = time.perf_counter()
     selection_sort(arr)
     t_stop = time.perf_counter()
-    print("Czas obliczeń sortowania insertion sort dla duzej tablicy:", "{:.7f}".format(t_stop - t_start))
+    print("Czas obliczeń sortowania select sort dla duzej tablicy:", "{:.7f}".format(t_stop - t_start))
 
     print()
     print("=================================================")
@@ -220,13 +214,13 @@ if __name__ == "__main__":
 
     arr = [(5,'A'), (5,'B'), (7,'C'), (2,'D'), (5,'E'), (1,'F'), (7,'G'), (5,'H'), (1,'I'), (2,'J')]
     arr = [Element(key, value) for value, key in arr]
-    insertion_sort(arr)
-    print("Wynik sortowania insertion sort")
+    selection_sort_shift(arr)
+    print("Wynik sortowania select sort przez shift")
     print(arr)
     
     arr = [random.randint(0, 100) for _ in range(10000)]
     t_start = time.perf_counter()
-    insertion_sort(arr)
+    selection_sort_shift(arr)
     t_stop = time.perf_counter()
     print("Czas obliczeń sortowania insertion sort dla duzej tablicy:", "{:.7f}".format(t_stop - t_start))
 

@@ -195,6 +195,25 @@ def resolve_right_imbalance(head):
     return new_head
 
 
+def find_imbalance(head):
+    if head.right_height < 2 and head.left_height < 2:
+        return head
+
+    if head.left_height - head.right_height == 2:
+        head = resolve_left_imbalance(head)
+
+    if head.right_height - head.left_height == 2:
+        head = resolve_right_imbalance(head)
+    
+    if head.left is not None:
+        head.left = find_imbalance(head.left)
+    
+    if head.right is not None:
+        head.right = find_imbalance(head.right)
+    
+    return head
+
+
 class AVLTree(BinaryTree):
     def __init__(self) -> None:
         super().__init__()
@@ -203,12 +222,7 @@ class AVLTree(BinaryTree):
         if self.head is None:
             self.head = AVLNode(key, value)
         insert_node(self.head, key, value)
-
-        if self.head.left_height - self.head.right_height == 2:
-            self.head = resolve_left_imbalance(self.head)
-
-        if self.head.right_height - self.head.left_height == 2:
-            self.head = resolve_right_imbalance(self.head)
+        self.head = find_imbalance(self.head)
 
     def delete(self, key):
         super().delete(key)
