@@ -156,9 +156,10 @@ def resolve_left_imbalance(head):
 
     # LL imbalance
     if left_node.left_height - left_node.right_height >= 0:
-        right_head = left_node.right
+        left_right = left_node.right
         left_node.right = head
-        head.left = right_head
+        head.left = left_right
+
         return left_node
 
     # LR imbalance
@@ -182,15 +183,16 @@ def resolve_right_imbalance(head):
         right_node.left = head
         head.right = right_node_left
         return right_node
-    
+
     # RL imbalance
     new_head = right_node.left
     new_head_left = new_head.left
     new_head_right = new_head.right
     new_head.left = head
     new_head.right = right_node
-    right_node.left = new_head_left
-    head.right = new_head_right
+
+    right_node.left = new_head_right
+    head.right = new_head_left
 
     return new_head
 

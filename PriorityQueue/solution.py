@@ -132,3 +132,4 @@ if __name__ == "__main__":
     while not queue.is_empty():
         print(queue.dequeue())
     queue.print_tab()
+
